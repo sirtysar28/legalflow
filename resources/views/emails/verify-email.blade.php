@@ -1,286 +1,79 @@
 {{--
     Email Verifikasi Email — LegalFlow.
     Dipakai oleh App\Notifications\VerifyEmailNotification.
-    Variabel: $user (App\Models\User), $verificationUrl (string, signed URL, berlaku 30 menit).
-    Semua style inline & table-based agar kompatibel Gmail/Outlook.
+    Variabel: $user (App\Models\User), $verificationUrl (string, signed URL).
+    Memakai layout branded (emails.layout) agar konsisten dengan email lain.
 --}}
-@php($logoUrl = company_logo_url())
+@extends('emails.layout')
 
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verifikasi Email {{ config('app.name') }}</title>
-</head>
+@section('emailTitle', 'Verifikasi Email — '.company_name())
 
-<body style="
-    margin:0;
-    padding:0;
-    background-color:#f4f6f8;
-    font-family:Arial, Helvetica, sans-serif;
-    color:#333333;
-">
+@section('emailContent')
+    @php($accent = '#2d5da8')
 
-<table width="100%" cellpadding="0" cellspacing="0" border="0"
-       style="background-color:#f4f6f8; margin:0; padding:0;">
+    {{-- Sapaan --}}
+    <p style="margin:0 0 18px;font-size:15px;color:#1f2937;line-height:1.7;">
+        Halo <strong>{{ $user->name }}</strong>,
+    </p>
+    <p style="margin:0 0 22px;font-size:14px;color:#4b5563;line-height:1.7;">
+        Terima kasih telah mendaftarkan akun Anda di
+        <strong>{{ company_name() }}</strong>. Aktifkan akun Anda dengan
+        memverifikasi alamat email berikut:
+    </p>
 
-    <tr>
-        <td align="center">
+    {{-- Banner alamat email yang diverifikasi --}}
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 24px;">
+        <tr>
+            <td align="center" style="background-color:#f8fafc;border:1px solid #e8edf5;border-radius:12px;padding:22px 18px;">
+                <div style="width:64px;height:64px;margin:0 auto 14px;border-radius:16px;background-color:#e8eef9;text-align:center;">
+                    <span style="font-size:30px;line-height:64px;">&#9993;&#65039;</span>
+                </div>
+                <div style="font-size:11px;font-weight:bold;letter-spacing:1.4px;color:#8a94a6;text-transform:uppercase;">
+                    Email Terdaftar
+                </div>
+                <div style="font-size:17px;font-weight:bold;color:#111827;margin-top:6px;word-break:break-all;">
+                    {{ $user->email }}
+                </div>
+            </td>
+        </tr>
+    </table>
 
-            {{-- ===== MAIN CONTAINER ===== --}}
-            <table width="600" cellpadding="0" cellspacing="0" border="0"
-                   style="
-                       width:100%;
-                       max-width:600px;
-                       background-color:#ffffff;
-                       margin:20px auto;
-                       border:1px solid #e2e5e8;
-                   ">
+    {{-- Tombol verifikasi --}}
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 16px;">
+        <tr>
+            <td align="center">
+                <a href="{{ $verificationUrl }}"
+                   style="display:inline-block;background-color:{{ $accent }};background:linear-gradient(135deg,#16294f 0%,{{ $accent }} 100%);color:#ffffff;text-decoration:none;font-weight:bold;font-size:14px;padding:14px 44px;border-radius:9px;box-shadow:0 4px 12px rgba(45,93,168,.25);">
+                    Verifikasi Email Saya
+                </a>
+            </td>
+        </tr>
+        <tr>
+            <td align="center" style="padding-top:14px;font-size:12px;color:#8a94a6;line-height:1.7;">
+                Tombol tidak berfungsi? Salin tautan berikut ke browser Anda:<br>
+                <a href="{{ $verificationUrl }}" style="color:{{ $accent }};word-break:break-all;">{{ $verificationUrl }}</a>
+            </td>
+        </tr>
+    </table>
 
-                {{-- ===== LOGO HEADER ===== --}}
-                <tr>
-                    <td align="center"
-                        style="
-                            background-color:#ffffff;
-                            padding:22px 20px 18px 20px;
-                        ">
+    {{-- Catatan masa berlaku & keamanan --}}
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 4px;">
+        <tr>
+            <td style="background-color:#fdf3dd;border:1px dashed #ecd9a8;border-left:4px solid #d97706;border-radius:10px;padding:13px 18px;font-size:12.5px;color:#92400e;line-height:1.7;">
+                <strong>&#9203; Tautan ini berlaku {{ config('verification.expire', 30) }} menit</strong>
+                sejak email dikirim. Bila kedaluwarsa, minta tautan baru melalui halaman aplikasi.
+            </td>
+        </tr>
+    </table>
 
-                        {{-- Pakai logo perusahaan bila sudah diatur Admin;
-                             jika belum, tampilkan branding teks LEGALFLOW. --}}
-                        @if (\App\Models\Setting::get('company_logo'))
-                            <img src="{{ $logoUrl }}" alt="Logo {{ company_name() }}"
-                                 width="150"
-                                 style="display:inline-block;width:150px;max-width:70%;height:auto;border:0;">
-                        @else
-                            <div style="
-                                font-size:27px;
-                                font-weight:bold;
-                                letter-spacing:1px;
-                                color:#1e5eff;
-                            ">
-                                LEGAL<span style="color:#263238;">FLOW</span>
-                            </div>
-                        @endif
+    <p style="margin:18px 0 0;font-size:12.5px;color:#6b7280;line-height:1.7;">
+        Jika Anda tidak merasa mendaftarkan akun di {{ company_name() }},
+        abaikan email ini — tidak ada tindakan lebih lanjut yang diperlukan.
+    </p>
+@endsection
 
-                        <div style="
-                            font-size:11px;
-                            color:#8a8f98;
-                            margin-top:4px;
-                            letter-spacing:2px;
-                        ">
-                            LEGAL MANAGEMENT SYSTEM
-                        </div>
-
-                    </td>
-                </tr>
-
-
-                {{-- ===== BLUE HERO ===== --}}
-                <tr>
-                    <td align="center"
-                        style="
-                            background:linear-gradient(
-                                135deg,
-                                #155eef 0%,
-                                #1683e8 100%
-                            );
-                            background-color:#1769e8;
-                            padding:42px 30px 45px 30px;
-                        ">
-
-                        <div style="
-                            font-size:18px;
-                            line-height:26px;
-                            font-weight:bold;
-                            color:#ffffff;
-                            margin-bottom:10px;
-                        ">
-                            Halo, {{ $user->name }}!
-                        </div>
-
-                        <div style="
-                            font-size:18px;
-                            line-height:27px;
-                            font-weight:bold;
-                            color:#ffffff;
-                        ">
-                            Selamat Datang di {{ config('app.name') }}
-                        </div>
-
-                        <div style="
-                            max-width:480px;
-                            margin:16px auto 0 auto;
-                            font-size:14px;
-                            line-height:22px;
-                            color:#ffffff;
-                        ">
-                            Terima kasih telah mendaftarkan akun Anda
-                            di {{ config('app.name') }}. Kami siap membantu Anda
-                            mengelola proses legal secara lebih mudah,
-                            cepat, dan terstruktur.
-                        </div>
-
-
-                        {{-- ===== WHITE CARD ===== --}}
-                        <table width="100%" cellpadding="0" cellspacing="0"
-                               border="0"
-                               style="
-                                   max-width:500px;
-                                   margin:30px auto 0 auto;
-                                   background-color:#ffffff;
-                                   border-radius:8px;
-                               ">
-
-                            <tr>
-                                <td align="center"
-                                    style="padding:30px 25px 25px 25px;">
-
-                                    <div style="
-                                        font-size:14px;
-                                        line-height:22px;
-                                        color:#424242;
-                                    ">
-                                        Untuk mengaktifkan akun dan
-                                        menerima informasi penting dari
-                                        <strong style="color:#1769e8;">
-                                            {{ config('app.name') }}
-                                        </strong>,
-                                        silakan verifikasi alamat email Anda.
-                                    </div>
-
-
-                                    {{-- ===== BUTTON ===== --}}
-                                    <table cellpadding="0"
-                                           cellspacing="0"
-                                           border="0"
-                                           style="margin:25px auto 0 auto;">
-
-                                        <tr>
-                                            <td align="center"
-                                                bgcolor="#1683e8"
-                                                style="
-                                                    border-radius:4px;
-                                                ">
-
-                                                <a href="{{ $verificationUrl }}"
-                                                   style="
-                                                       display:inline-block;
-                                                       padding:14px 32px;
-                                                       font-size:14px;
-                                                       font-weight:bold;
-                                                       color:#ffffff;
-                                                       text-decoration:none;
-                                                       background-color:#1683e8;
-                                                       border-radius:4px;
-                                                   ">
-                                                    Verifikasi Email
-                                                </a>
-
-                                            </td>
-                                        </tr>
-
-                                    </table>
-
-                                </td>
-                            </tr>
-
-
-                            {{-- ===== EXPIRATION ===== --}}
-                            <tr>
-                                <td align="center"
-                                    style="
-                                        background-color:#f7f7f7;
-                                        border-top:1px solid #eeeeee;
-                                        padding:15px 20px;
-                                        border-radius:0 0 8px 8px;
-                                    ">
-
-                                    <div style="
-                                        font-size:11px;
-                                        line-height:18px;
-                                        color:#777777;
-                                        font-style:italic;
-                                    ">
-                                        Tautan verifikasi ini akan
-                                        berlaku selama 30 menit.
-                                    </div>
-
-                                    <div style="
-                                        font-size:10px;
-                                        line-height:16px;
-                                        color:#a0a6ad;
-                                        margin-top:6px;
-                                        word-break:break-all;
-                                    ">
-                                        Tombol tidak berfungsi? Salin tautan ini ke browser Anda:<br>
-                                        <a href="{{ $verificationUrl }}" style="color:#1683e8;">{{ $verificationUrl }}</a>
-                                    </div>
-
-                                </td>
-                            </tr>
-
-                        </table>
-
-                    </td>
-                </tr>
-
-
-                {{-- ===== SECURITY INFORMATION ===== --}}
-                <tr>
-                    <td align="center"
-                        style="
-                            padding:25px 30px 10px 30px;
-                            background-color:#ffffff;
-                        ">
-
-                        <div style="
-                            font-size:12px;
-                            line-height:20px;
-                            color:#666666;
-                        ">
-                            Jika Anda tidak merasa melakukan pendaftaran
-                            akun {{ config('app.name') }}, abaikan email ini.
-                        </div>
-
-                    </td>
-                </tr>
-
-
-                {{-- ===== FOOTER ===== --}}
-                <tr>
-                    <td align="center"
-                        style="
-                            padding:10px 30px 25px 30px;
-                            background-color:#ffffff;
-                        ">
-
-                        <div style="
-                            font-size:12px;
-                            line-height:18px;
-                            color:#9aa0a6;
-                        ">
-                            &copy; {{ date('Y') }} {{ company_name() }}
-                        </div>
-
-                        <div style="
-                            font-size:11px;
-                            line-height:18px;
-                            color:#b0b4b8;
-                            margin-top:4px;
-                        ">
-                            Legal Management System
-                        </div>
-
-                    </td>
-                </tr>
-
-            </table>
-
-        </td>
-    </tr>
-
-</table>
-
-</body>
-</html>
+@section('emailFootnote')
+    Email ini dikirim otomatis karena ada pendaftaran akun baru di {{ company_name() }}
+    memakai alamat email ini.<br>
+    Mohon tidak membalas email ini secara langsung.
+@endsection
