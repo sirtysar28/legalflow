@@ -2,13 +2,16 @@
 
 namespace App\Models;
 
+use App\Notifications\VerifyEmailNotification;
+use Illuminate\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail as MustVerifyEmailContract;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmailContract
 {
-    use HasFactory, Notifiable;
+    use HasFactory, MustVerifyEmail, Notifiable;
 
     protected $fillable = [
         'name',
@@ -30,6 +33,14 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * Email verifikasi memakai template custom (emails.verify-email).
+     */
+    public function sendEmailVerificationNotification(): void
+    {
+        $this->notify(new VerifyEmailNotification);
     }
 
     public function role()

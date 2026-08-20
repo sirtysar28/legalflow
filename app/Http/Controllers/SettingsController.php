@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rule;
+use Throwable;
 
 class SettingsController extends Controller
 {
@@ -180,11 +181,11 @@ class SettingsController extends Controller
         ]);
 
         // Prioritas nilai dari form, fallback ke yang tersimpan.
-        $host = $request->input('smtp_host') ?: Setting::get('smtp_host');
+        $host = trim((string) ($request->input('smtp_host') ?: Setting::get('smtp_host') ?? ''));
         $port = (int) ($request->input('smtp_port') ?: Setting::get('smtp_port', 587));
-        $username = $request->input('smtp_username') ?: Setting::get('smtp_username');
+        $username = trim((string) ($request->input('smtp_username') ?: Setting::get('smtp_username') ?? ''));
         $password = filled($request->input('smtp_password'))
-            ? $request->input('smtp_password')
+            ? trim((string) $request->input('smtp_password'))
             : Setting::getDecrypted('smtp_password');
         $encryption = $request->input('smtp_encryption') ?: Setting::get('smtp_encryption', 'tls');
         $fromAddress = $request->input('mail_from_address') ?: Setting::get('mail_from_address', 'legalflow@localhost');
@@ -217,11 +218,24 @@ class SettingsController extends Controller
                         ->subject("Email Percobaan — {$fromName}");
                 }
             );
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
+            $message = $e->getMessage();
+            $friendly = 'Gagal mengirim email: '.$message;
+
+            // Pesan yang lebih jelas untuk kegagalan umum SMTP.
+            if (str_contains($message, '535')) {
+                $friendly = 'Username atau password SMTP ditolak oleh server (535 Incorrect authentication data). '
+                    .'Pastikan akun email ada di server mail dan password benar — ketik ulang password di kolom SMTP, jangan dikosongkan.';
+            } elseif (str_contains($message, 'Connection could not be established') || str_contains($message, 'Connection refused')) {
+                $friendly = 'Tidak bisa terhubung ke SMTP host/port. Periksa host, port, dan pengaturan enkripsi (SSL=465, TLS=587). Detail: '.$message;
+            } elseif (str_contains($message, 'timed out')) {
+                $friendly = 'Koneksi ke SMTP server timeout. Periksa host/port dan pastikan port tidak diblokir firewall. Detail: '.$message;
+            }
+
             return redirect()
                 ->to('/settings#tab-smtp')
                 ->withInput($request->except(['smtp_password']))
-                ->with('danger', 'Gagal mengirim email: '.$e->getMessage());
+                ->with('danger', $friendly);
         }
 
         return redirect()

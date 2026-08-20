@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Department;
 use App\Models\Role;
+use App\Models\Setting;
 use App\Models\User;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
@@ -28,9 +30,14 @@ class UserController extends Controller
     {
         $data = $this->validated($request, true);
 
-        User::create($data + ['password' => Hash::make($data['password'])]);
+        $user = User::create($data + ['password' => Hash::make($data['password'])]);
 
-        return redirect()->route('admin.users.index')->with('success', 'User berhasil ditambahkan.');
+        // Kirim email verifikasi ke user baru (via event Registered).
+        // rescue() agar pembuatan user tetap sukses walau SMTP bermasalah.
+        rescue(fn () => event(new Registered($user)));
+
+        return redirect()->route('admin.users.index')->with('success', 'User berhasil ditambahkan.'
+            .(Setting::get('smtp_enabled') === '1' ? ' Email verifikasi telah dikirim.' : ''));
     }
 
     public function edit(User $user)

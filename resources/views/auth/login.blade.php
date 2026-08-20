@@ -69,9 +69,15 @@
         /* ================= PANEL KANAN — FORM ================= */
         .login-panel {
             flex: 1; display: flex; align-items: center; justify-content: center;
-            padding: 2rem 1.25rem; background: #f4f7fc; position: relative;
+            padding: 2rem 1.25rem; background: #f4f7fc; position: relative; overflow: hidden;
         }
-        .login-box { width: 100%; max-width: 430px; animation: riseIn .55s ease both; }
+        .login-panel::before {
+            content: ''; position: absolute; inset: 0; pointer-events: none;
+            background:
+                radial-gradient(600px 300px at 85% -10%, rgba(74,127,212,.10), transparent 70%),
+                radial-gradient(500px 280px at -10% 110%, rgba(106,76,147,.08), transparent 70%);
+        }
+        .login-box { width: 100%; max-width: 430px; animation: riseIn .55s ease both; position: relative; }
         @keyframes riseIn {
             from { opacity: 0; transform: translateY(18px); }
             to   { opacity: 1; transform: translateY(0); }
@@ -79,9 +85,14 @@
 
         .login-logo-mobile { display: none; }
         .login-card {
-            background: #fff; border-radius: 1.4rem; padding: 2.35rem 2.2rem 2rem;
+            background: #fff; border-radius: 1.5rem; padding: 2.35rem 2.2rem 2rem;
             box-shadow: 0 22px 60px rgba(10, 18, 38, .13);
             border: 1px solid rgba(230, 234, 242, .8);
+            position: relative; overflow: hidden;
+        }
+        .login-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+            background: linear-gradient(90deg, #16294f, #2d5da8 55%, #6a4c93);
         }
         .login-title { font-size: 1.5rem; font-weight: 800; color: var(--lf-navy); margin: 0 0 .3rem; }
         .login-sub { color: #64748b; font-size: .88rem; margin-bottom: 1.75rem; }
@@ -109,6 +120,29 @@
         }
         .lf-field .toggle-password:hover { color: var(--lf-accent); background: #eef2f9; }
 
+        /* ============ CAPTCHA ============ */
+        .captcha-row { display: flex; gap: .6rem; align-items: stretch; }
+        .captcha-row .lf-field { flex: 1; margin-bottom: 0; }
+        .captcha-row .form-control { letter-spacing: .3em; text-transform: uppercase; font-weight: 700; }
+        .captcha-box {
+            display: flex; align-items: center; gap: .45rem; flex-shrink: 0;
+        }
+        .captcha-img {
+            height: 48px; width: 148px; border-radius: .8rem; cursor: pointer;
+            border: 1.6px solid #dde3ee; background: #f9fafd;
+            transition: border-color .2s, box-shadow .2s;
+        }
+        .captcha-img:hover { border-color: var(--lf-accent-2); box-shadow: 0 0 0 .22rem rgba(74,127,212,.14); }
+        .captcha-img.loading { opacity: .45; }
+        .captcha-refresh {
+            height: 48px; width: 48px; flex-shrink: 0; border: 1.6px solid #dde3ee;
+            border-radius: .8rem; background: #f9fafd; color: #64748b;
+            display: inline-flex; align-items: center; justify-content: center; font-size: 1.05rem;
+            transition: all .2s ease;
+        }
+        .captcha-refresh:hover { border-color: var(--lf-accent-2); color: var(--lf-accent); background: #eef4fd; transform: rotate(45deg); }
+        .captcha-hint { font-size: .72rem; color: #94a3b8; margin: .5rem 0 0 .2rem; }
+
         .btn-submit {
             width: 100%; height: 48px; border: none; border-radius: .8rem;
             font-weight: 700; font-size: .95rem; color: #fff; letter-spacing: .2px;
@@ -117,28 +151,19 @@
             transition: transform .12s ease, filter .2s ease, box-shadow .2s ease;
             display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
         }
+        .btn-submit .bi-arrow-right { transition: transform .2s ease; }
         .btn-submit:hover { filter: brightness(1.12); transform: translateY(-1px); box-shadow: 0 12px 26px rgba(45,93,168,.48); color:#fff; }
+        .btn-submit:hover .bi-arrow-right { transform: translateX(4px); }
         .btn-submit:disabled { opacity: .85; }
 
         .login-meta { display: flex; align-items: center; justify-content: space-between; margin: .35rem 0 1.4rem; }
         .login-meta .form-check-label { font-size: .82rem; color: #52617f; }
         .login-meta .form-check-input { border-color: #cdd6e4; }
         .login-meta .form-check-input:checked { background-color: var(--lf-accent); border-color: var(--lf-accent); }
-
-        /* Chips akun demo */
-        .demo-wrap { margin-top: 1.4rem; text-align: center; }
-        .demo-title {
-            display: flex; align-items: center; gap: .8rem; color: #8a94a6;
-            font-size: .74rem; text-transform: uppercase; letter-spacing: .12em; margin-bottom: .7rem;
+        .secure-note {
+            display: inline-flex; align-items: center; gap: .35rem; font-size: .76rem; color: #7c8aa5;
         }
-        .demo-title::before, .demo-title::after { content: ''; flex: 1; height: 1px; background: #e2e8f2; }
-        .demo-chips { display: flex; flex-wrap: wrap; justify-content: center; gap: .45rem; }
-        .demo-chip {
-            border: 1px solid #dbe3f0; background: #f8fafd; color: #40507a;
-            font-size: .76rem; border-radius: 99px; padding: .34rem .85rem; cursor: pointer;
-            transition: all .18s ease; font-weight: 600;
-        }
-        .demo-chip:hover { border-color: var(--lf-accent-2); color: var(--lf-accent); background: #eef4fd; transform: translateY(-1px); }
+        .secure-note .bi { color: #3d9a6c; }
 
         .login-footer { text-align: center; color: #8a94a6; font-size: .76rem; margin-top: 1.4rem; }
 
@@ -179,6 +204,7 @@
         }
         @media (max-width: 480px) {
             .login-card { padding: 1.8rem 1.4rem 1.6rem; }
+            .captcha-img { width: 120px; }
         }
     </style>
 </head>
@@ -273,28 +299,44 @@
                     @enderror
                 </div>
 
+                {{-- ===== CAPTCHA ===== --}}
+                <div class="lf-field">
+                    <div class="captcha-row">
+                        <div class="lf-field">
+                            <i class="bi bi-puzzle lf-field-icon"></i>
+                            <input type="text" class="form-control @error('captcha') is-invalid @enderror" id="captcha"
+                                   name="captcha" placeholder="KODE" maxlength="5" required
+                                   autocomplete="off" autocapitalize="characters" spellcheck="false"
+                                   style="padding-right:1rem;">
+                            @error('captcha')
+                                <div class="invalid-feedback d-block small ps-1">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="captcha-box">
+                            <img src="{{ route('captcha') }}" alt="Kode keamanan" class="captcha-img"
+                                 id="captchaImage" title="Klik untuk ganti kode">
+                            <button type="button" class="captcha-refresh" id="captchaRefresh"
+                                    aria-label="Ganti kode keamanan" title="Ganti kode keamanan">
+                                <i class="bi bi-arrow-clockwise"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="captcha-hint">Masukkan 5 karakter yang tampil pada gambar — klik gambar <i class="bi bi-arrow-repeat"></i> untuk mengganti.</div>
+                </div>
+
                 <div class="login-meta">
                     <div class="form-check mb-0">
                         <input class="form-check-input" type="checkbox" name="remember" id="remember">
                         <label class="form-check-label" for="remember">Ingat saya</label>
                     </div>
-                    <span class="small text-muted"><i class="bi bi-shield-lock me-1"></i>Koneksi aman</span>
+                    <span class="secure-note"><i class="bi bi-shield-lock"></i>Koneksi aman</span>
                 </div>
 
                 <button type="submit" class="btn-submit" id="loginBtn">
-                    <i class="bi bi-box-arrow-in-right"></i> Masuk
+                    <span>Masuk</span> <i class="bi bi-arrow-right"></i>
                 </button>
             </form>
-
-            <div class="demo-wrap">
-                <div class="demo-title">Akun Demo — klik untuk isi otomatis</div>
-                <div class="demo-chips">
-                    <button type="button" class="demo-chip" data-email="admin@legalflow.test">👑 Admin</button>
-                    <button type="button" class="demo-chip" data-email="legal@legalflow.test">⚖️ Legal</button>
-                    <button type="button" class="demo-chip" data-email="user@legalflow.test">👤 User</button>
-                    <button type="button" class="demo-chip" data-email="budi@legalflow.test">🛒 Purchasing</button>
-                </div>
-            </div>
         </div>
 
         <div class="login-footer">
@@ -329,16 +371,23 @@
         });
     });
 
-    // ---------- Chip akun demo: isi otomatis ----------
-    document.querySelectorAll('.demo-chip').forEach(function (chip) {
-        chip.addEventListener('click', function () {
-            const email = document.getElementById('email');
-            const password = document.getElementById('password');
-            email.value = this.dataset.email;
-            password.value = 'password';
-            password.focus();
-        });
-    });
+    // ---------- CAPTCHA: muat ulang dengan cache-buster ----------
+    const captchaImage = document.getElementById('captchaImage');
+    const captchaInput = document.getElementById('captcha');
+
+    function refreshCaptcha() {
+        if (!captchaImage) return;
+        captchaImage.classList.add('loading');
+        // Query unik memastikan browser tidak memakai cache —
+        // server meregenerasi kode baru setiap kali gambar diminta.
+        captchaImage.src = '{{ route('captcha') }}' + '?t=' + Date.now() + '-' + Math.random().toString(36).slice(2, 7);
+        if (captchaInput) captchaInput.value = '';
+    }
+
+    captchaImage?.addEventListener('load', () => captchaImage.classList.remove('loading'));
+    captchaImage?.addEventListener('error', () => captchaImage.classList.remove('loading'));
+    captchaImage?.addEventListener('click', refreshCaptcha);
+    document.getElementById('captchaRefresh')?.addEventListener('click', refreshCaptcha);
 
     // ---------- Spinner saat proses login ----------
     const loginForm = document.getElementById('loginForm');
@@ -368,14 +417,21 @@
         }, 1300);
     });
 
-    // Bila kembali via tombol back browser (BFCache), pastikan loader tersembunyi.
+    // Bila kembali via tombol back browser (BFCache), pastikan loader tersembunyi
+    // dan captcha diambil ulang (kode lama sudah dikonsumsi/hangus di server).
     window.addEventListener('pageshow', function (e) {
         if (e.persisted) {
             loginLoader.classList.remove('show');
             loginBtn.disabled = false;
-            loginBtn.innerHTML = '<i class="bi bi-box-arrow-in-right"></i> Masuk';
+            loginBtn.innerHTML = '<span>Masuk</span> <i class="bi bi-arrow-right"></i>';
+            refreshCaptcha();
         }
     });
+
+    // Pindah fokus ke captcha otomatis bila ada error captcha.
+    @if ($errors->has('captcha'))
+        document.getElementById('captcha')?.focus();
+    @endif
 </script>
 </body>
 </html>

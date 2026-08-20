@@ -16,6 +16,8 @@ use App\Http\Controllers\DocumentFolderController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\SettingsController;
+use Illuminate\Auth\Requests\EmailVerificationRequest;
+use Illuminate\Http\Request as HttpRequest;
 use Illuminate\Support\Facades\Route;
 
 // Landing page (publik)
@@ -28,10 +30,33 @@ Route::get('/', fn () => redirect()->route(auth()->check() ? 'dashboard' : 'land
 Route::middleware('guest')->group(function () {
     Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [LoginController::class, 'login'])->name('login.attempt');
+
+    // Gambar captcha untuk form login (kode disimpan sebagai hash di session).
+    Route::get('/captcha', \App\Http\Controllers\Auth\CaptchaController::class.'@show')->name('captcha');
 });
 
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
+    // ---------------- Verifikasi Email ----------------
+    // Tautan dari email (signed URL, berlaku sesuai config/verification.php).
+    Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+        $request->fulfill();
+
+        return redirect()->route('dashboard')
+            ->with('success', 'Email Anda berhasil diverifikasi. Terima kasih!');
+    })->middleware('signed')->name('verification.verify');
+
+    // Kirim ulang email verifikasi (rate-limited 6x/menit).
+    Route::post('/email/verification-notification', function (HttpRequest $request) {
+        if ($request->user()->hasVerifiedEmail()) {
+            return back()->with('info', 'Email Anda sudah terverifikasi.');
+        }
+
+        $request->user()->sendEmailVerificationNotification();
+
+        return back()->with('success', 'Tautan verifikasi telah dikirim ulang ke email Anda.');
+    })->middleware('throttle:6,1')->name('verification.send');
 
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
 

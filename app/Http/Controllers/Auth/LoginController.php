@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Http\Controllers\Auth\CaptchaController;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -20,16 +21,27 @@ class LoginController extends Controller
 
     public function login(Request $request): RedirectResponse
     {
-        $credentials = $request->validate([
+        $validated = $request->validate([
             'email'    => ['required', 'email'],
             'password' => ['required'],
+            'captcha'  => ['required', 'string'],
         ], [
             'email.required'    => 'Email wajib diisi.',
             'email.email'       => 'Format email tidak valid.',
             'password.required' => 'Password wajib diisi.',
+            'captcha.required'  => 'Kode keamanan wajib diisi.',
         ]);
 
+        // Verifikasi captcha SEBELUM memeriksa kredensial (sekali pakai,
+        // case-insensitive, kedaluwarsa 10 menit).
+        if (! CaptchaController::verify($validated['captcha'] ?? null)) {
+            return back()->withErrors(['captcha' => 'Kode keamanan salah atau sudah kedaluwarsa.'])
+                ->withInput($request->only('email'));
+        }
+
         $remember = $request->boolean('remember');
+
+        $credentials = $request->only('email', 'password');
 
         if (! auth()->attempt($credentials, $remember)) {
             return back()->withErrors(['email' => 'Email atau password salah.'])
