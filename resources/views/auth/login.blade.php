@@ -27,17 +27,23 @@
         :root {
             --lf-blue: #2563eb;
             --lf-blue-dark: #2457d6;
+
+            /* Tinggi elemen form menyesuaikan tinggi layar
+               agar pas tanpa scroll di laptop resolusi kecil. */
+            --lf-input-h: clamp(42px, 6vh, 52px);
         }
 
         body {
             font-family: 'Sora', sans-serif;
             min-height: 100vh;
+            min-height: 100dvh;
             background: #f7f9fc;
             color: #1f2937;
         }
 
         .login-wrapper {
             min-height: 100vh;
+            min-height: 100dvh;
             display: flex;
             overflow: hidden;
         }
@@ -49,6 +55,7 @@
         .login-left {
             width: 50%;
             min-height: 100vh;
+            min-height: 100dvh;
             position: relative;
             overflow: hidden;
 
@@ -102,7 +109,7 @@
             z-index: 5;
             width: 100%;
             max-width: 650px;
-            padding: 70px 12%;
+            padding: clamp(26px, 6.5vh, 70px) 12%;
         }
 
         /* Logo */
@@ -111,12 +118,12 @@
             display: flex;
             align-items: center;
             gap: 14px;
-            margin-bottom: 48px;
+            margin-bottom: clamp(20px, 4.5vh, 48px);
         }
 
         .brand-logo {
-            width: 48px;
-            height: 48px;
+            width: clamp(40px, 5vh, 48px);
+            height: clamp(40px, 5vh, 48px);
 
             display: flex;
             align-items: center;
@@ -147,23 +154,23 @@
         /* Heading */
 
         .hero-title {
-            font-size: clamp(42px, 4vw, 58px);
+            font-size: clamp(30px, 1.8vw + 3.2vh, 54px);
             line-height: 1.12;
             font-weight: 700;
             letter-spacing: -1.5px;
 
-            margin-bottom: 24px;
+            margin-bottom: clamp(12px, 3vh, 24px);
         }
 
         .hero-description {
             max-width: 560px;
 
-            font-size: 16px;
-            line-height: 1.8;
+            font-size: clamp(12.5px, 1.9vh, 16px);
+            line-height: 1.7;
 
             color: rgba(255,255,255,.86);
 
-            margin-bottom: 48px;
+            margin-bottom: clamp(18px, 5vh, 48px);
         }
 
         /* Feature */
@@ -173,15 +180,15 @@
             align-items: center;
             gap: 14px;
 
-            font-size: 14px;
+            font-size: clamp(12px, 1.7vh, 14px);
             color: rgba(255,255,255,.92);
 
-            margin-bottom: 18px;
+            margin-bottom: clamp(8px, 2.2vh, 18px);
         }
 
         .feature-icon {
-            width: 38px;
-            height: 38px;
+            width: clamp(32px, 4.6vh, 38px);
+            height: clamp(32px, 4.6vh, 38px);
 
             flex-shrink: 0;
 
@@ -202,6 +209,7 @@
         .login-right {
             width: 50%;
             min-height: 100vh;
+            min-height: 100dvh;
 
             position: relative;
             overflow: hidden;
@@ -267,7 +275,7 @@
 
             border-radius: 22px;
 
-            padding: 38px 34px 32px;
+            padding: clamp(24px, 4.6vh, 38px) clamp(22px, 3vw, 34px) clamp(20px, 4vh, 32px);
 
             box-shadow:
                 0 20px 60px rgba(15, 23, 42, .10),
@@ -283,7 +291,7 @@
             align-items: center;
             gap: 8px;
 
-            font-size: 27px;
+            font-size: clamp(22px, 3.2vh, 27px);
             line-height: 1.3;
 
             font-weight: 700;
@@ -301,7 +309,7 @@
             line-height: 1.7;
             color: #7b8794;
 
-            margin-bottom: 30px;
+            margin-bottom: clamp(16px, 3.6vh, 30px);
         }
 
         /* Notifikasi sukses (session flash) */
@@ -332,7 +340,7 @@
         ========================================= */
 
         .form-group {
-            margin-bottom: 22px;
+            margin-bottom: clamp(13px, 2.8vh, 22px);
         }
 
         .form-label {
@@ -343,7 +351,7 @@
 
             color: #273449;
 
-            margin-bottom: 9px;
+            margin-bottom: clamp(6px, 1.2vh, 9px);
         }
 
         .input-wrapper {
@@ -367,7 +375,7 @@
 
         .form-input {
             width: 100%;
-            height: 52px;
+            height: var(--lf-input-h);
 
             border: 1px solid #dce2e9;
             border-radius: 12px;
@@ -476,7 +484,7 @@
         }
 
         .captcha-img {
-            height: 52px;
+            height: var(--lf-input-h);
             width: 138px;
             flex-shrink: 0;
 
@@ -499,7 +507,7 @@
         }
 
         .captcha-refresh {
-            height: 52px;
+            height: var(--lf-input-h);
             width: 52px;
             flex-shrink: 0;
 
@@ -541,7 +549,7 @@
             justify-content: space-between;
 
             margin-top: -4px;
-            margin-bottom: 25px;
+            margin-bottom: clamp(14px, 3vh, 25px);
         }
 
         .remember {
@@ -584,7 +592,7 @@
 
         .login-button {
             width: 100%;
-            height: 52px;
+            height: var(--lf-input-h);
 
             border: none;
             border-radius: 11px;
@@ -638,8 +646,8 @@
         .login-help {
             text-align: center;
 
-            margin-top: 26px;
-            padding-top: 20px;
+            margin-top: clamp(14px, 3vh, 26px);
+            padding-top: clamp(12px, 2.6vh, 20px);
             border-top: 1px dashed #e6eaf2;
 
             font-size: 11px;
@@ -654,7 +662,7 @@
         .login-footer {
             text-align: center;
 
-            margin-top: 14px;
+            margin-top: clamp(8px, 1.8vh, 14px);
 
             font-size: 10px;
 
@@ -710,7 +718,7 @@
         #loginLoaderSub {
             font-size: .78rem;
             color: rgba(255,255,255,.6);
-            margin-top: -.6rem;
+            margin-top: .35rem;
         }
 
         .loader-dots {
@@ -746,7 +754,7 @@
             }
 
             .hero-title {
-                font-size: 42px;
+                font-size: clamp(28px, 2vw + 3vh, 42px);
             }
 
             .login-card {
@@ -769,6 +777,7 @@
             .login-right {
                 width: 100%;
                 min-height: calc(100vh - 320px);
+                min-height: calc(100dvh - 320px);
 
                 padding: 40px 0;
             }
@@ -814,6 +823,7 @@
 
             .login-right {
                 min-height: calc(100vh - 290px);
+                min-height: calc(100dvh - 290px);
             }
 
             .left-content {
@@ -860,6 +870,143 @@
 
             .captcha-refresh {
                 flex-shrink: 0;
+            }
+        }
+
+        /* =========================================
+           LAYAR PENDEK (laptop 1366×768 / 1280×720)
+           Viewport asli browser biasanya hanya
+           ±550–620px, jadi form dipadatkan agar
+           seluruh kartu login muat tanpa scroll.
+        ========================================= */
+
+        @media (max-height: 820px) {
+
+            /* Pengaman: bila suatu saat konten lebih tinggi
+               dari panel, scroll terjadi DI DALAM panel —
+               bukan seluruh halaman. */
+            .login-right {
+                align-items: safe center;
+                overflow-y: auto;
+                padding-block: 10px;
+            }
+
+            /* Panel kiri ikut dipadatkan */
+
+            .left-content {
+                padding: 22px 10%;
+            }
+
+            .brand {
+                margin-bottom: 18px;
+            }
+
+            .brand-logo {
+                width: 38px;
+                height: 38px;
+            }
+
+            .brand-name {
+                font-size: 16px;
+            }
+
+            .hero-title {
+                font-size: clamp(26px, 3.4vw + 2vh, 36px);
+                margin-bottom: 10px;
+            }
+
+            .hero-description {
+                font-size: 12px;
+                line-height: 1.6;
+                margin-bottom: 18px;
+            }
+
+            .feature {
+                font-size: 11.5px;
+                margin-bottom: 7px;
+            }
+
+            .feature-icon {
+                width: 30px;
+                height: 30px;
+                font-size: 12px;
+            }
+
+            /* Kartu login dipadatkan — muat di ±470px tinggi */
+
+            .login-card {
+                padding: 22px 28px 18px;
+                border-radius: 16px;
+            }
+
+            .login-title {
+                font-size: 21px;
+                margin-bottom: 3px;
+            }
+
+            .login-title .wave-hand {
+                font-size: 19px;
+            }
+
+            .login-subtitle {
+                font-size: 12px;
+                margin-bottom: 15px;
+            }
+
+            .flash-success {
+                padding: 8px 12px;
+                margin-bottom: 14px;
+                font-size: 11.5px;
+            }
+
+            .form-group {
+                margin-bottom: 12px;
+            }
+
+            .form-label {
+                font-size: 11.5px;
+                margin-bottom: 5px;
+            }
+
+            .form-input {
+                height: 42px;
+                font-size: 12.5px;
+                border-radius: 10px;
+            }
+
+            .captcha-img,
+            .captcha-refresh {
+                height: 42px;
+            }
+
+            .captcha-hint {
+                margin-top: 5px;
+                font-size: 10px;
+            }
+
+            .form-options {
+                margin-bottom: 15px;
+            }
+
+            .remember {
+                font-size: 11.5px;
+            }
+
+            .login-button {
+                height: 42px;
+                border-radius: 10px;
+                font-size: 12.5px;
+            }
+
+            .login-help {
+                margin-top: 13px;
+                padding-top: 11px;
+                font-size: 10.5px;
+            }
+
+            .login-footer {
+                margin-top: 7px;
+                font-size: 9.5px;
             }
         }
 
@@ -1193,7 +1340,7 @@
             <!-- FOOTER -->
 
             <div class="login-footer">
-                &copy; {{ date('Y') }} {{ company_name() }} — PT Trijaya Solution. All rights reserved.
+                &copy; {{ date('Y') }} {{ company_name() }} — CV Trijaya Solution. All rights reserved.
             </div>
 
         </div>

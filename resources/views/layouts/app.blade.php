@@ -274,7 +274,7 @@
         }
         @keyframes lfSpin { to { transform: rotate(360deg); } }
         .lf-loader-text { font-weight: 700; color: var(--lf-navy); font-size: .92rem; }
-        .lf-loader-sub { font-size: .78rem; color: #8a94a6; margin-top: -.35rem; }
+        .lf-loader-sub { font-size: .78rem; color: #8a94a6; margin-top: .35rem; }
         .lf-loader-dots { display: flex; gap: 6px; }
         .lf-loader-dots span {
             width: 7px; height: 7px; border-radius: 50%; background: var(--lf-accent-2);
