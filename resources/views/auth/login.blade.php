@@ -33,17 +33,25 @@
             --lf-input-h: clamp(42px, 6vh, 52px);
         }
 
+        html,
+        body {
+            height: 100%;
+        }
+
         body {
             font-family: 'Sora', sans-serif;
-            min-height: 100vh;
-            min-height: 100dvh;
+
+            /* Halaman dikunci — tidak bisa di-scroll sama sekali.
+               Scroll pengaman (bila perlu) terjadi di dalam panel. */
+            overflow: hidden;
+
             background: #f7f9fc;
             color: #1f2937;
         }
 
         .login-wrapper {
-            min-height: 100vh;
-            min-height: 100dvh;
+            height: 100vh;
+            height: 100dvh;
             display: flex;
             overflow: hidden;
         }
@@ -54,8 +62,7 @@
 
         .login-left {
             width: 50%;
-            min-height: 100vh;
-            min-height: 100dvh;
+            height: 100%;
             position: relative;
             overflow: hidden;
 
@@ -208,8 +215,7 @@
 
         .login-right {
             width: 50%;
-            min-height: 100vh;
-            min-height: 100dvh;
+            height: 100%;
 
             position: relative;
             overflow: hidden;
@@ -765,17 +771,30 @@
 
         @media (max-width: 768px) {
 
+            /* Di layar sempit konten jauh lebih tinggi dari viewport,
+               jadi scroll halaman diizinkan kembali di sini. */
+            body {
+                height: auto;
+                overflow: auto;
+            }
+
             .login-wrapper {
                 display: block;
+                height: auto;
+                min-height: 100vh;
+                min-height: 100dvh;
+                overflow: visible;
             }
 
             .login-left {
                 width: 100%;
+                height: auto;
                 min-height: 320px;
             }
 
             .login-right {
                 width: 100%;
+                height: auto;
                 min-height: calc(100vh - 320px);
                 min-height: calc(100dvh - 320px);
 
