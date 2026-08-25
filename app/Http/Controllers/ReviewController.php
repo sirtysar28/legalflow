@@ -33,6 +33,12 @@ class ReviewController extends Controller
             ]);
         }
 
+        if ($request->filled('q')) {
+            $q = (string) $request->query('q');
+            $query->where(fn ($w) => $w->where('title', 'like', "%{$q}%")
+                ->orWhere('application_number', 'like', "%{$q}%"));
+        }
+
         return view('review.queue', [
             'applications' => $query->paginate(10)->withQueryString(),
             'status'       => $status,

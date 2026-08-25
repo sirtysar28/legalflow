@@ -18,10 +18,18 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\SettingsController;
 use Illuminate\Auth\Requests\EmailVerificationRequest;
 use Illuminate\Http\Request as HttpRequest;
-use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Artisan;
 
 // Landing page (publik)
 Route::get('/landing', fn () => view('landing'))->name('landing');
+
+// ─── ROUTE SEMENTARA: Seed dummy data ───
+// BUKA SEKALI lalu HAPUS route ini setelah data terisi.
+Route::get('/seed-dummy', function () {
+    Artisan::call('legalflow:dummy-data', ['--no-interaction' => true]);
+    return '<pre>'.Artisan::output().'</pre>';
+});
+// ─── AKHIR ROUTE SEMENTARA ───
 
 // Root
 Route::get('/', fn () => redirect()->route(auth()->check() ? 'dashboard' : 'landing'));

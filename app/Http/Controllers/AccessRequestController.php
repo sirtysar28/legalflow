@@ -61,13 +61,20 @@ class AccessRequestController extends Controller
     /**
      * Daftar permintaan akses milik saya.
      */
-    public function mine()
+    public function mine(Request $request)
     {
         DocumentAccessRequest::syncExpiry();
 
         $requests = DocumentAccessRequest::with(['application.user', 'application.department', 'reviewer'])
             ->where('requested_by', auth()->id())
-            ->latest()->paginate(10);
+            ->when($request->filled('q'), function ($query) use ($request) {
+                $q = $request->string('q');
+                $query->where(fn ($w) => $w->where('reason', 'like', "%{$q}%")
+                    ->orWhereHas('application', fn ($a) => $a
+                        ->where('application_number', 'like', "%{$q}%")
+                        ->orWhere('title', 'like', "%{$q}%")));
+            })
+            ->latest()->paginate(10)->withQueryString();
 
         return view('access.mine', compact('requests'));
     }
@@ -75,12 +82,20 @@ class AccessRequestController extends Controller
     /**
      * Daftar permintaan akses masuk untuk Legal/Admin.
      */
-    public function incoming()
+    public function incoming(Request $request)
     {
         DocumentAccessRequest::syncExpiry();
 
         $requests = DocumentAccessRequest::with(['application.user', 'application.department', 'requester', 'reviewer'])
-            ->latest()->paginate(10);
+            ->when($request->filled('q'), function ($query) use ($request) {
+                $q = $request->string('q');
+                $query->where(fn ($w) => $w->where('reason', 'like', "%{$q}%")
+                    ->orWhereHas('application', fn ($a) => $a
+                        ->where('application_number', 'like', "%{$q}%")
+                        ->orWhere('title', 'like', "%{$q}%"))
+                    ->orWhereHas('requester', fn ($r) => $r->where('name', 'like', "%{$q}%")));
+            })
+            ->latest()->paginate(10)->withQueryString();
 
         return view('access.incoming', compact('requests'));
     }

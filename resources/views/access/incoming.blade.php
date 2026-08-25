@@ -2,9 +2,15 @@
 @section('title', 'Permintaan Akses Dokumen')
 
 @section('content')
-<div class="mb-4">
-    <h4 class="fw-bold mb-1">Permintaan Akses Dokumen</h4>
-    <p class="text-muted mb-0">Review permintaan akses dari user lain — setujui dengan jenis &amp; masa berlaku akses, atau tolak</p>
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
+    <div>
+        <h4 class="fw-bold mb-1">Permintaan Akses Dokumen</h4>
+        <p class="text-muted mb-0">Review permintaan akses dari user lain — setujui dengan jenis &amp; masa berlaku akses, atau tolak</p>
+    </div>
+    <form method="GET" class="d-flex gap-2">
+        <input type="text" name="q" value="{{ request('q') }}" class="form-control" placeholder="Cari peminta / nomor / alasan...">
+        <button class="btn btn-primary"><i class="bi bi-search"></i></button>
+    </form>
 </div>
 
 <div class="card lf-card">

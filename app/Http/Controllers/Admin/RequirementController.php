@@ -11,7 +11,12 @@ class RequirementController extends Controller
 {
     public function index(Request $request)
     {
-        $requirements = DocumentRequirement::with('permitType')->orderBy('document_name')->paginate(10);
+        $requirements = DocumentRequirement::with('permitType')
+            ->when($request->filled('q'), function ($query) use ($request) {
+                $q = $request->string('q');
+                $query->where('document_name', 'like', "%{$q}%");
+            })
+            ->orderBy('document_name')->paginate(10)->withQueryString();
         $permitTypes = PermitType::orderBy('name')->get();
         $editing = $request->filled('edit') ? DocumentRequirement::findOrFail($request->query('edit')) : null;
 

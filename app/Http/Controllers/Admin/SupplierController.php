@@ -8,9 +8,17 @@ use Illuminate\Http\Request;
 
 class SupplierController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $suppliers = Supplier::withCount('applications')->orderBy('name')->paginate(10);
+        $suppliers = Supplier::withCount('applications')
+            ->when($request->filled('q'), function ($query) use ($request) {
+                $q = $request->string('q');
+                $query->where('name', 'like', "%{$q}%")
+                    ->orWhere('npwp', 'like', "%{$q}%")
+                    ->orWhere('contact_person', 'like', "%{$q}%")
+                    ->orWhere('email', 'like', "%{$q}%");
+            })
+            ->orderBy('name')->paginate(10)->withQueryString();
 
         return view('admin.suppliers.index', compact('suppliers'));
     }

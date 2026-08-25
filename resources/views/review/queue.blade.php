@@ -2,17 +2,23 @@
 @section('title', 'Antrean Review')
 
 @section('content')
-<div class="mb-4">
-    <h4 class="fw-bold mb-1">Antrean Review Legal/Admin</h4>
-    <p class="text-muted mb-0">Pengajuan Perizinan &amp; Agreement yang menunggu pemeriksaan</p>
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
+    <div>
+        <h4 class="fw-bold mb-1">Antrean Review Legal/Admin</h4>
+        <p class="text-muted mb-0">Pengajuan Perizinan &amp; Agreement yang menunggu pemeriksaan</p>
+    </div>
+    <form method="GET" class="d-flex gap-2">
+        <input type="text" name="q" value="{{ request('q') }}" class="form-control" placeholder="Cari nomor / judul...">
+        <button class="btn btn-primary"><i class="bi bi-search"></i></button>
+    </form>
 </div>
 
 <div class="card lf-card">
     <div class="card-header bg-white py-3">
         <div class="d-flex flex-wrap gap-2">
-            <a href="{{ route('review.queue') }}" class="btn btn-sm {{ $status ? 'btn-outline-secondary' : 'btn-primary' }}">Antrean Aktif</a>
+            <a href="{{ route('review.queue', array_filter(['q' => request('q')])) }}" class="btn btn-sm {{ $status ? 'btn-outline-secondary' : 'btn-primary' }}">Antrean Aktif</a>
             @foreach ($statuses as $value => $label)
-                <a href="{{ route('review.queue', ['status' => $value]) }}"
+                <a href="{{ route('review.queue', array_filter(['status' => $value, 'q' => request('q')])) }}"
                    class="btn btn-sm {{ $status?->value === $value ? 'btn-primary' : 'btn-outline-secondary' }}">{{ $label }}</a>
             @endforeach
         </div>

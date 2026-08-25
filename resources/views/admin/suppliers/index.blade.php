@@ -7,7 +7,13 @@
         <h4 class="fw-bold mb-1">Kelola Supplier</h4>
         <p class="text-muted mb-0">Data supplier &amp; status Supplier Assessment untuk pembuatan agreement</p>
     </div>
-    <a href="{{ route('admin.suppliers.create') }}" class="btn btn-primary"><i class="bi bi-plus-circle me-1"></i>Tambah Supplier</a>
+    <div class="d-flex gap-2">
+        <form method="GET" class="d-flex gap-2">
+            <input type="text" name="q" value="{{ request('q') }}" class="form-control" placeholder="Cari nama / NPWP / kontak...">
+            <button class="btn btn-outline-primary"><i class="bi bi-search"></i></button>
+        </form>
+        <a href="{{ route('admin.suppliers.create') }}" class="btn btn-primary"><i class="bi bi-plus-circle me-1"></i>Tambah Supplier</a>
+    </div>
 </div>
 
 <div class="card lf-card">

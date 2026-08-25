@@ -5,7 +5,13 @@
 @section('content')
 <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
     <h4 class="fw-bold mb-0">Manajemen User</h4>
-    <a href="{{ route('admin.users.create') }}" class="btn btn-primary"><i class="bi bi-person-plus me-1"></i>Tambah User</a>
+    <div class="d-flex gap-2">
+        <form method="GET" class="d-flex gap-2">
+            <input type="text" name="q" value="{{ request('q') }}" class="form-control" placeholder="Cari nama / email...">
+            <button class="btn btn-outline-primary"><i class="bi bi-search"></i></button>
+        </form>
+        <a href="{{ route('admin.users.create') }}" class="btn btn-primary"><i class="bi bi-person-plus me-1"></i>Tambah User</a>
+    </div>
 </div>
 
 <div class="card lf-card">

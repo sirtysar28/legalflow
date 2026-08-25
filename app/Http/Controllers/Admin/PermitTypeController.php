@@ -10,7 +10,13 @@ class PermitTypeController extends Controller
 {
     public function index(Request $request)
     {
-        $permitTypes = PermitType::withCount('requirements')->orderBy('name')->paginate(10);
+        $permitTypes = PermitType::withCount('requirements')
+            ->when($request->filled('q'), function ($query) use ($request) {
+                $q = $request->string('q');
+                $query->where('name', 'like', "%{$q}%")
+                    ->orWhere('description', 'like', "%{$q}%");
+            })
+            ->orderBy('name')->paginate(10)->withQueryString();
         $editing = $request->filled('edit') ? PermitType::findOrFail($request->query('edit')) : null;
 
         return view('admin.permit-types.index', compact('permitTypes', 'editing'));

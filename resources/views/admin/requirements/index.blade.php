@@ -2,9 +2,15 @@
 @section('title', 'Persyaratan Dokumen')
 
 @section('content')
-<div class="mb-4">
-    <h4 class="fw-bold mb-1">Kelola Persyaratan Dokumen</h4>
-    <p class="text-muted mb-0">Tentukan dokumen wajib/opsional per jenis izin (Permit) dan untuk Agreement</p>
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
+    <div>
+        <h4 class="fw-bold mb-1">Kelola Persyaratan Dokumen</h4>
+        <p class="text-muted mb-0">Tentukan dokumen wajib/opsional per jenis izin (Permit) dan untuk Agreement</p>
+    </div>
+    <form method="GET" class="d-flex gap-2">
+        <input type="text" name="q" value="{{ request('q') }}" class="form-control" placeholder="Cari nama dokumen...">
+        <button class="btn btn-outline-primary"><i class="bi bi-search"></i></button>
+    </form>
 </div>
 
 <div class="row g-3">
@@ -92,6 +98,7 @@
                     </tbody>
                 </table>
             </div>
+            <div class="card-footer bg-white py-3">{{ $requirements->links() }}</div>
         </div>
     </div>
 </div>

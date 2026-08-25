@@ -10,7 +10,13 @@ class DepartmentController extends Controller
 {
     public function index(Request $request)
     {
-        $departments = Department::withCount('users')->orderBy('name')->paginate(10);
+        $departments = Department::withCount('users')
+            ->when($request->filled('q'), function ($query) use ($request) {
+                $q = $request->string('q');
+                $query->where('name', 'like', "%{$q}%")
+                    ->orWhere('code', 'like', "%{$q}%");
+            })
+            ->orderBy('name')->paginate(10)->withQueryString();
         $editing = $request->filled('edit') ? Department::findOrFail($request->query('edit')) : null;
 
         return view('admin.departments.index', compact('departments', 'editing'));

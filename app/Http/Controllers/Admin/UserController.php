@@ -14,9 +14,15 @@ use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::with(['role', 'department'])->orderBy('name')->paginate(10);
+        $users = User::with(['role', 'department'])
+            ->when($request->filled('q'), function ($query) use ($request) {
+                $q = $request->string('q');
+                $query->where('name', 'like', "%{$q}%")
+                    ->orWhere('email', 'like', "%{$q}%");
+            })
+            ->orderBy('name')->paginate(10)->withQueryString();
 
         return view('admin.users.index', compact('users'));
     }

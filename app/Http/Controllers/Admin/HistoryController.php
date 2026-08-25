@@ -22,7 +22,7 @@ class HistoryController extends Controller
                         ->orWhere('title', 'like', "%{$q}%")));
             })
             ->latest()
-            ->paginate(15)
+            ->paginate(10)
             ->withQueryString();
 
         return view('admin.histories.index', compact('histories'));
